@@ -15,10 +15,10 @@ class App extends React.Component<{}, {}> {
                         </ul>
                         <hr/>
 
-                        <Route path="/user/Login" component={() => <User operate="login"/>}/>
+                        <Route path="/user/Login" component={() => <User operate="login" url="/user/login"/>}/>
                         <Route
                             path="/user/ChangePass"
-                            component={() => <User operate="changePass"/>}
+                            component={() => <User operate="changePass" url="/user/changePass"/>}
                         />
                     </div>
                 </Router>
