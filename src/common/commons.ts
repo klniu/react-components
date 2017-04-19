@@ -29,13 +29,6 @@ export interface IStringBooleanMap extends IStringTMap<boolean> {
 export interface INumberBooleanMap extends INumberTMap<boolean> {
 }
 
-export interface TreeNode {
-    label: string;
-    value: string;
-    key: string;
-    children?: TreeNode[];
-}
-
 // golang NullString
 export interface NullString {
     String: string;
