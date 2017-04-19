@@ -6,7 +6,7 @@ import {ColumnField, getFormItems, HandleFormData} from '../common/forms';
 import {IStringAnyMap, ServerResult} from '../common/commons';
 import isEqual from 'lodash/isEqual';
 
-export interface FormGroupProps extends FormComponentProps {
+export interface FormGroupProps {
     url: string
     formOptions: ColumnField[]
     onComplete?: (params?: IStringAnyMap) => void
@@ -20,14 +20,18 @@ interface FormGroupStates {
     alertMsg: string
 }
 
-class FormGroup extends React.Component<FormGroupProps, FormGroupStates> {
+interface FormGroupAndAntdProps extends FormGroupProps, FormComponentProps {
+
+}
+
+class FormGroup extends React.Component<FormGroupAndAntdProps, FormGroupStates> {
     state: FormGroupStates = {
         loading: false,
         alertShow: false,
         alertMsg: ''
     };
 
-    constructor(props: FormGroupProps) {
+    constructor(props: FormGroupAndAntdProps) {
         super(props);
     }
 

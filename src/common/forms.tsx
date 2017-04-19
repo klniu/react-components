@@ -3,12 +3,10 @@ import {Input, Form, InputNumber, Select, DatePicker, Cascader, TreeSelect, Chec
 import moment from 'moment';
 import {CascaderOptionType} from 'antd/lib/cascader';
 import {TreeData} from 'antd/lib/tree-select/interface';
-import {isArray, isFunction, isUndefined} from 'util';
+import {isArray} from 'util';
 import update from 'immutability-helper';
 import {IStringAnyMap} from './commons';
 import {FormItemLabelColOption} from 'antd/lib/form/FormItem';
-
-type FormArrayType = CascaderOptionType[] | TreeData[] | OptionData[]
 
 export interface OptionData {
     title: string
@@ -27,7 +25,7 @@ export interface ColumnField {
     label?: string; // the name of the field
     hideLabel?: boolean; // if the label is hidden
     hide?: boolean; // the whole field will be hidden
-    defaultValue?: number | string | boolean; // the defaultValue value of the field
+    defaultValue?: number | string | boolean | moment.Moment[]; // the defaultValue value of the field
     props?: Object;  // the props of input element
     fieldOptions?: IStringAnyMap; // ones of getFieldDecorator using.
     // if the data from parent, using with refField, the data need to use from parent, using with refField
@@ -36,7 +34,7 @@ export interface ColumnField {
     // used as array, object, will expanded according the input element type;
     // if it is a function, it will be executed to get the values.
     // only used in Tree, Cascader, Select, multiSelect
-    arrayData?: () => FormArrayType | CascaderOptionType[] | TreeData[] | OptionData[];
+    arrayData?: CascaderOptionType[] | TreeData[] | OptionData[] | (() => CascaderOptionType[] | TreeData[] | OptionData[]) ;
     // a function to render defaultData, the first param is the default value,
     // the second is the all form fields
     // the third is the initialData of all form fields
@@ -78,13 +76,13 @@ export function getFormItems(getFieldDecorator: Function, formOptions: ColumnFie
             defaultData = v.defaultValue;
         }
         // if there is render function, render it
-        if (v.render && isFunction(v.render)) {
+        if (v.render && typeof v.render === "function") {
             defaultData = v.render(defaultData, formOptions, initData);
         }
 
         // handle arrayValues for select, multipleSelect, cascade
         let arrayValues;
-        if (v.arrayData && isFunction(v.arrayData)) {
+        if (v.arrayData && typeof v.arrayData === "function") {
             arrayValues = v.arrayData();
         } else {
             arrayValues = v.arrayData;
@@ -126,7 +124,7 @@ export function getFormItems(getFieldDecorator: Function, formOptions: ColumnFie
                     }
                 }
                 // set defaultData "" if not set
-                if (isUndefined(defaultData)) {
+                if (!defaultData) {
                     defaultData = '';
                 } else {
                     // set to string

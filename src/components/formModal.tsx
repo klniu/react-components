@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {Modal, Form} from 'antd';
 import {FormGroupProps, default as IForm} from './form';
+import {FormComponentProps} from 'antd/lib/form/Form';
 
 export interface FormModalProps extends FormGroupProps {
     show: boolean
@@ -11,12 +12,14 @@ interface FormModalStates {
     show: boolean
 }
 
-class FormModal extends React.Component<FormModalProps, FormModalStates> {
+interface FormModalAndAntdProps extends FormModalProps, FormComponentProps {}
+
+class FormModal extends React.Component<FormModalAndAntdProps, FormModalStates> {
     state: FormModalStates = {
         show: this.props.show
     };
 
-    constructor(props: FormModalProps) {
+    constructor(props: FormModalAndAntdProps) {
         super(props);
     }
 
