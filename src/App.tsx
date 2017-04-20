@@ -5,6 +5,8 @@ import User from './components/user';
 import IForm from './components/form';
 import {formGroupProps} from './data';
 import IFormModal from './components/formModal';
+import Row from 'antd/lib/grid/row';
+import Col from 'antd/lib/grid/col';
 
 class App extends React.Component<{}, {}> {
     render() {
@@ -44,7 +46,13 @@ class UserChangePass extends React.Component<any, any> {
 
 class IFormTest extends React.Component<any, any> {
     render() {
-        return ( <IForm url="/form/submit" formOptions={formGroupProps}/> );
+        return (
+            <Row type="flex" justify="center">
+                <Col span={6}>
+                    <IForm url="/form/submit" formOptions={formGroupProps}/>
+                </Col>
+            </Row>
+        );
     }
 }
 

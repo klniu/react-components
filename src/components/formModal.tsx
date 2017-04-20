@@ -4,15 +4,16 @@ import {FormGroupProps, default as IForm} from './form';
 import {FormComponentProps} from 'antd/lib/form/Form';
 
 export interface FormModalProps extends FormGroupProps {
-    show: boolean
-    title: string
+    show: boolean;
+    title: string;
 }
 
 interface FormModalStates {
-    show: boolean
+    show: boolean;
 }
 
-interface FormModalAndAntdProps extends FormModalProps, FormComponentProps {}
+interface FormModalAndAntdProps extends FormModalProps, FormComponentProps {
+}
 
 class FormModal extends React.Component<FormModalAndAntdProps, FormModalStates> {
     state: FormModalStates = {
@@ -23,8 +24,8 @@ class FormModal extends React.Component<FormModalAndAntdProps, FormModalStates> 
         super(props);
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.show != this.state.show) {
+    componentWillReceiveProps(nextProps: FormModalProps) {
+        if (nextProps.show !== this.state.show) {
             this.setState({show: nextProps.show});
         }
     }
@@ -35,14 +36,9 @@ class FormModal extends React.Component<FormModalAndAntdProps, FormModalStates> 
 
     render() {
         return (
-            <Modal
-                visible={this.state.show}
-                footer=""
-                title={this.props.title}
-                maskClosable={true}
-                onCancel={this.Cancel}
-            >
-                <IForm {...this.props} />
+            <Modal visible={this.state.show} footer="" title={this.props.title} maskClosable={true}
+                   onCancel={this.Cancel}>
+                <IForm {...this.props} displayCancelButton={true} onCancel={this.Cancel}/>
             </Modal>
         );
     }

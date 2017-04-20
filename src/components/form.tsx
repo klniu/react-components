@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Alert, Form, message, Button} from 'antd';
+import {Alert, Form, message, Button, Row, Col} from 'antd';
 import reqwest from 'reqwest';
 import {FormComponentProps} from 'antd/lib/form/Form';
 import {ColumnField, getFormItems, HandleFormData} from '../common/forms';
@@ -7,21 +7,22 @@ import {IStringAnyMap, ServerResult} from '../common/commons';
 import isEqual from 'lodash/isEqual';
 
 export interface FormGroupProps {
-    url: string
-    formOptions: ColumnField[]
-    onComplete?: (params?: IStringAnyMap) => void
-    initData?: IStringAnyMap
-    parentData?: IStringAnyMap
+    url: string;
+    formOptions: ColumnField[];
+    onComplete?: (params?: IStringAnyMap) => void;
+    displayCancelButton?: boolean;
+    onCancel?: (params?: IStringAnyMap) => void;
+    initData?: IStringAnyMap;
+    parentData?: IStringAnyMap;
 }
 
 interface FormGroupStates {
-    loading: boolean
-    alertShow: boolean
-    alertMsg: string
+    loading: boolean;
+    alertShow: boolean;
+    alertMsg: string;
 }
 
 interface FormGroupAndAntdProps extends FormGroupProps, FormComponentProps {
-
 }
 
 class FormGroup extends React.Component<FormGroupAndAntdProps, FormGroupStates> {
@@ -98,6 +99,7 @@ class FormGroup extends React.Component<FormGroupAndAntdProps, FormGroupStates> 
         const formItemLayout = {
             labelCol: {
                 span: 6,
+                offset: 2
             },
             wrapperCol: {
                 span: 14,
@@ -106,13 +108,29 @@ class FormGroup extends React.Component<FormGroupAndAntdProps, FormGroupStates> 
         // add inputs
         let components = getFormItems(getFieldDecorator, this.props.formOptions, this.props.parentData,
             this.props.initData, formItemLayout);
+        let submitButtons: JSX.Element[] = [];
+        submitButtons.push((
+            <Col key="submit" span={6} offset={9}>
+                <Form.Item>
+                    <Button type="primary" htmlType="submit">提交</Button>
+                </Form.Item>
+            </Col>));
+        if (this.props.displayCancelButton) {
+            submitButtons.push((
+                <Col key="cancel" span={6} offset={3}>
+                    <Form.Item>
+                        <Button onClick={this.props.onCancel}>提交</Button>
+                    </Form.Item>
+                </Col>));
+        }
+        submitButtons.push((<Col key="empty" span={2}/>));
         return (
             <div>
                 <Form onSubmit={this.handleSubmit}>
                     {components}
-                    <Form.Item wrapperCol={{span: 12, offset: 6}}>
-                        <Button type="primary" htmlType="submit">提交</Button>
-                    </Form.Item>
+                    <Row type="flex" justify="center">
+                        {submitButtons}
+                    </Row>
                 </Form>
                 <div style={{display: this.state.alertShow ? 'block' : 'none'}}>
                     <Alert message={this.state.alertMsg} type="error" showIcon={true}/>
