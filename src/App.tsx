@@ -7,6 +7,7 @@ import {formGroupProps} from './data';
 import IFormModal from './components/formModal';
 import Row from 'antd/lib/grid/row';
 import Col from 'antd/lib/grid/col';
+import {UploadModal} from './components/upload';
 
 class App extends React.Component<{}, {}> {
     render() {
@@ -19,6 +20,7 @@ class App extends React.Component<{}, {}> {
                             <li><Link to="/user/ChangePass">Change Password</Link></li>
                             <li><Link to="/Form">Form</Link></li>
                             <li><Link to="/FormModal">FormModal</Link></li>
+                            <li><Link to="/Upload">Upload</Link></li>
                         </ul>
                         <hr/>
 
@@ -26,6 +28,7 @@ class App extends React.Component<{}, {}> {
                         <Route path="/user/ChangePass" component={UserChangePass}/>
                         <Route path="/Form" component={IFormTest}/>
                         <Route path="/FormModal" component={IFormModalTest}/>
+                        <Route path="/Upload" component={UploadTest}/>
                     </div>
                 </Router>
             </div>
@@ -62,5 +65,10 @@ class IFormModalTest extends React.Component<any, any> {
     }
 }
 
+class UploadTest extends React.Component<any, any> {
+    render() {
+        return ( <UploadModal show={true} url="/upload/submit" accept=".xlsx"/>);
+    }
+}
 
 export default App;
