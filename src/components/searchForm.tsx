@@ -2,7 +2,7 @@ import * as React from 'react';
 import {Button, Form, Row, Col, Checkbox, Collapse} from 'antd';
 import {FormComponentProps} from 'antd/lib/form/Form';
 import {ColumnField, getFormItems, HandleFormData} from '../common/forms';
-import {IAlert} from '../common/commons';
+import {AlertGroup} from '../common/commons';
 
 export interface SearchFormProps extends FormComponentProps {
     ItemsPerRow: number; // 一行包含的的输入框数量
@@ -12,7 +12,7 @@ export interface SearchFormProps extends FormComponentProps {
 
 interface SearchFormStates {
     loading: boolean
-    alerts: IAlert[]
+    alerts: AlertGroup[]
     searchButtonDisabled: boolean
 }
 

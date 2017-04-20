@@ -5,18 +5,18 @@ import {CascaderOptionType} from 'antd/lib/cascader';
 import {TreeData} from 'antd/lib/tree-select/interface';
 import {isArray} from 'util';
 import update from 'immutability-helper';
-import {IStringAnyMap} from './commons';
+import {StringAnyMap} from './commons';
 import {FormItemLabelColOption} from 'antd/lib/form/FormItem';
 
 export interface OptionData {
-    title: string
-    value: string | number
+    title: string;
+    value: string | number;
 }
 
 // used in form item
 export interface ItemLayout {
-    labelCol?: FormItemLabelColOption
-    wrapperCol?: FormItemLabelColOption
+    labelCol?: FormItemLabelColOption;
+    wrapperCol?: FormItemLabelColOption;
 }
 
 export interface ColumnField {
@@ -27,21 +27,22 @@ export interface ColumnField {
     hide?: boolean; // the whole field will be hidden
     defaultValue?: number | string | boolean | moment.Moment[]; // the defaultValue value of the field
     props?: Object;  // the props of input element
-    fieldOptions?: IStringAnyMap; // ones of getFieldDecorator using.
+    fieldOptions?: StringAnyMap; // ones of getFieldDecorator using.
     // if the data from parent, using with refField, the data need to use from parent, using with refField
     isRefData?: boolean;
     refField?: string; // using with isRefData
     // used as array, object, will expanded according the input element type;
     // if it is a function, it will be executed to get the values.
     // only used in Tree, Cascader, Select, multiSelect
-    arrayData?: CascaderOptionType[] | TreeData[] | OptionData[] | (() => CascaderOptionType[] | TreeData[] | OptionData[]) ;
+    arrayData?: CascaderOptionType[] | TreeData[] | OptionData[] | (() => CascaderOptionType[] | TreeData[] |
+        OptionData[]) ;
     // a function to render defaultData, the first param is the default value,
     // the second is the all form fields
     // the third is the initialData of all form fields
-    render?: (val: any, formOptions?: ColumnField[], Data?: IStringAnyMap) => any;
+    render?: (val: any, formOptions?: ColumnField[], Data?: StringAnyMap) => any;
     // a function to handle the submit data, the first param is the value of the field
     // the second is the all form fields
-    submit?: (val: any, formsOptions?: ColumnField[], Data?: IStringAnyMap) => any;
+    submit?: (val: any, formsOptions?: ColumnField[], Data?: StringAnyMap) => any;
 }
 
 export enum FieldType {
@@ -55,8 +56,8 @@ export enum FieldType {
 // refData is the parent data of items,
 // initData is for initializing the items
 // itemOptions is the item options for all the items.
-export function getFormItems(getFieldDecorator: Function, formOptions: ColumnField[], refData?: IStringAnyMap,
-                             initData?: IStringAnyMap, formItemLayout?: ItemLayout, itemOptions?: IStringAnyMap): any[] {
+export function getFormItems(getFieldDecorator: Function, formOptions: ColumnField[], refData?: StringAnyMap,
+                             initData?: StringAnyMap, formItemLayout?: ItemLayout, itemOptions?: StringAnyMap): any[] {
     let components: any[] = [];
     for (let i = 0, len = formOptions.length; i < len; i++) {
         let v = formOptions[i];
@@ -76,13 +77,13 @@ export function getFormItems(getFieldDecorator: Function, formOptions: ColumnFie
             defaultData = v.defaultValue;
         }
         // if there is render function, render it
-        if (v.render && typeof v.render === "function") {
+        if (v.render && typeof v.render === 'function') {
             defaultData = v.render(defaultData, formOptions, initData);
         }
 
         // handle arrayValues for select, multipleSelect, cascade
         let arrayValues;
-        if (v.arrayData && typeof v.arrayData === "function") {
+        if (v.arrayData && typeof v.arrayData === 'function') {
             arrayValues = v.arrayData();
         } else {
             arrayValues = v.arrayData;
@@ -102,11 +103,7 @@ export function getFormItems(getFieldDecorator: Function, formOptions: ColumnFie
                 break;
             case FieldType.Number:
                 element = getFieldDecorator(v.id, {...v.fieldOptions, ...itemOptions, initialValue: defaultData})(
-                    <InputNumber
-                        size="default"
-                        style={{width: '100%'}}
-                        {...v.props}
-                    />);
+                    <InputNumber size="default" style={{width: '100%'}} {...v.props}/>);
                 break;
             case FieldType.PlainText :
                 element = <span className="ant-form-text">{defaultData}</span>;
@@ -231,9 +228,9 @@ export function getFormItems(getFieldDecorator: Function, formOptions: ColumnFie
 
 // execute the submit for every field, convert date to utc
 // formOptions is like
-export function HandleFormData(values: IStringAnyMap, formOptions: ColumnField[]): IStringAnyMap {
+export function HandleFormData(values: StringAnyMap, formOptions: ColumnField[]): StringAnyMap {
     // make a new object to include new value
-    let params: IStringAnyMap = {};
+    let params: StringAnyMap = {};
     for (let i = 0, len = formOptions.length; i < len; i++) {
         let v = formOptions[i];
         let value = values[v.id];

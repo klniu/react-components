@@ -17,27 +17,12 @@ export interface HeaderProps {
 }
 
 interface HeaderStates {
-    currentKey: string
+    currentKey: string;
 }
 
 export default class Header extends React.Component<HeaderProps, HeaderStates> {
-    constructor(props: HeaderProps) {
-        super(props);
-    }
-
     state: HeaderStates = {
         currentKey: ''
-    };
-
-    handleClick = (e: any) => {
-        this.setState({currentKey: e.key});
-        let click = (title) => {
-            if (e.key === title.name && title.onClick) {
-                title.onClick();
-            }
-            title.children && title.children.forEach(click);
-        };
-        this.props.titles.forEach(click);
     };
 
     // get one level items
@@ -57,6 +42,21 @@ export default class Header extends React.Component<HeaderProps, HeaderStates> {
         }
     }
 
+    constructor(props: HeaderProps) {
+        super(props);
+    }
+
+    handleClick = (e: any) => {
+        this.setState({currentKey: e.key});
+        let click = (title) => {
+            if (e.key === title.name && title.onClick) {
+                title.onClick();
+            }
+            if (title.children) {title.children.forEach(click); }
+        };
+        this.props.titles.forEach(click);
+    };
+
     render() {
         let items: JSX.Element[] = [];
         for (let title of this.props.titles) {
@@ -68,7 +68,7 @@ export default class Header extends React.Component<HeaderProps, HeaderStates> {
                 }
                 let titleElem = title.iconType ? (<span><Icon type={title.iconType}/>{title.name}</span>) : title.name;
                 items.push((
-                    <SubMenu key={title.name} title={ titleElem }>{children}</SubMenu>));
+                    <SubMenu key={title.name} title={titleElem}>{children}</SubMenu>));
             } else {
                 items.push(Header.getMenuItem(title));
             }
@@ -76,14 +76,14 @@ export default class Header extends React.Component<HeaderProps, HeaderStates> {
         return (
             <header id="header">
                 <Row>
-                    <Col lg={ 4 } md={ 6 } sm={ 7 } xs={ 24 }>
+                    <Col lg={4} md={6} sm={7} xs={24}>
                         <Link to="/" className="logo">
                             <img alt="logo" src={this.props.logoUrl}/>
                         </Link>
                     </Col>
-                    <Col lg={ 20 } md={ 18 } sm={ 17 } xs={ 0 } style={ {display: 'block'} }>
-                        <Menu mode="horizontal" theme="light" style={ {lineHeight: '64px', fontSize: '16px'} }
-                              onClick={ this.handleClick } selectedKeys={[this.state.currentKey]}
+                    <Col lg={20} md={18} sm={17} xs={0} style={{display: 'block'}}>
+                        <Menu mode="horizontal" theme="light" style={{lineHeight: '64px', fontSize: '16px'}}
+                              onClick={this.handleClick} selectedKeys={[this.state.currentKey]}
                               defaultSelectedKeys={['ldar3']} className="nav">
                             {items}
                         </Menu>

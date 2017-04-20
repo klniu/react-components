@@ -3,17 +3,17 @@ import {Alert, Form, message, Button, Row, Col} from 'antd';
 import reqwest from 'reqwest';
 import {FormComponentProps} from 'antd/lib/form/Form';
 import {ColumnField, getFormItems, HandleFormData} from '../common/forms';
-import {IStringAnyMap, ServerResult} from '../common/commons';
+import {StringAnyMap, ServerResult} from '../common/commons';
 import isEqual from 'lodash/isEqual';
 
 export interface FormGroupProps {
     url: string;
     formOptions: ColumnField[];
-    onComplete?: (params?: IStringAnyMap) => void;
+    onComplete?: (params?: StringAnyMap) => void;
     displayCancelButton?: boolean;
-    onCancel?: (params?: IStringAnyMap) => void;
-    initData?: IStringAnyMap;
-    parentData?: IStringAnyMap;
+    onCancel?: (params?: StringAnyMap) => void;
+    initData?: StringAnyMap;
+    parentData?: StringAnyMap;
 }
 
 interface FormGroupStates {
@@ -67,7 +67,9 @@ class FormGroup extends React.Component<FormGroupAndAntdProps, FormGroupStates> 
     sendRequest = (url: string, params: Object) => {
         // when there is no url, call onComplete with value
         if (!url || url === '' || url === '#') {
-            this.props.onComplete && this.props.onComplete(params);
+            if (this.props.onComplete) {
+                this.props.onComplete(params);
+            }
             return;
         }
         this.setState({
@@ -84,8 +86,8 @@ class FormGroup extends React.Component<FormGroupAndAntdProps, FormGroupStates> 
                         alertMsg: result.msg,
                         alertShow: true
                     });
-                } else {
-                    this.props.onComplete && this.props.onComplete();
+                } else if (this.props.onComplete) {
+                    this.props.onComplete();
                 }
                 this.setState({
                     loading: false,
@@ -106,8 +108,8 @@ class FormGroup extends React.Component<FormGroupAndAntdProps, FormGroupStates> 
             },
         };
         // add inputs
-        let components = getFormItems(getFieldDecorator, this.props.formOptions, this.props.parentData,
-            this.props.initData, formItemLayout);
+        let components = getFormItems(getFieldDecorator, this.props.formOptions,
+            this.props.parentData, this.props.initData, formItemLayout);
         let submitButtons: JSX.Element[] = [];
         submitButtons.push((
             <Col key="submit" span={6} offset={9}>

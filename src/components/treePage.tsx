@@ -2,7 +2,7 @@ import * as React from 'react';
 import {Row, Col, Button, Table, message, Icon, Spin} from 'antd';
 import reqwest from 'reqwest';
 import {PaginationProps} from 'antd/lib/pagination';
-import {IStringAnyMap} from '../common/commons';
+import {StringAnyMap} from '../common/commons';
 import {ColumnField} from '../common/forms';
 import {ColumnProps} from 'antd/lib/table/Column';
 import {FormModalProps, default as IFormModal} from './formModal';
@@ -19,7 +19,7 @@ export interface TableParams {
 export interface TreePageProps {
     params: TreePageParam,
     refreshTable?: string // a random key to active the refresh of table
-    searchParams?: IStringAnyMap,
+    searchParams?: StringAnyMap,
     buttons?: any[],
     // default buttons is to display, there are six default buttons to display, parent add, edit, delete and
     // child add, edit, delete
@@ -45,13 +45,13 @@ interface TreePageStates {
 
     // tables
     tableData: any[],
-    childData: IStringAnyMap // {parentRowID: childData}
+    childData: StringAnyMap // {parentRowID: childData}
     pagination: PaginationProps
     selectedKeys: string[]
     childSelectedKeys: string[]
     rowKeyMap: { [key: string]: number } // the map between rowKey(id) and row index
-    parentRow: IStringAnyMap // record the parent row data selected
-    childRow: IStringAnyMap // record the child row data selected
+    parentRow: StringAnyMap // record the parent row data selected
+    childRow: StringAnyMap // record the child row data selected
     defaultButtonsDisplay: boolean[]
     formModalProps: FormModalProps
 }
@@ -110,7 +110,7 @@ class TreePage extends React.Component<TreePageProps, TreePageStates> {
     }
 
     // when table change
-    private handleTableChange = (pagination: PaginationProps, filters: string[], sorter: IStringAnyMap) => {
+    private handleTableChange = (pagination: PaginationProps, filters: string[], sorter: StringAnyMap) => {
         this.setState({
             pagination: update(this.state.pagination, {
                 $merge: pagination
@@ -133,7 +133,7 @@ class TreePage extends React.Component<TreePageProps, TreePageStates> {
             method: 'post',
             data: params,
             error: (err) => message.error('网络错误，请稍后重试'),
-            success: (result: IStringAnyMap) => {
+            success: (result: StringAnyMap) => {
                 if (result.msg != '') {
                     message.error(result.msg, 5);
                 } else {
@@ -164,7 +164,7 @@ class TreePage extends React.Component<TreePageProps, TreePageStates> {
     };
 
     // expand the row in parent table, get child data
-    private expandRow = (record: IStringAnyMap, index: number) => {
+    private expandRow = (record: StringAnyMap, index: number) => {
         const childData = this.state.childData[record[this.parentKey]];
         // record the map of parent rowKey and index
         if (childData && this.props.params.child) {
@@ -178,7 +178,7 @@ class TreePage extends React.Component<TreePageProps, TreePageStates> {
                        bordered
                        rowSelection={ rowSelection }
                        rowClassName={ TreePage.rowRender }
-                       rowKey={ (record: IStringAnyMap) => '' + record[this.childKey] }/>
+                       rowKey={ (record: StringAnyMap) => '' + record[this.childKey] }/>
             );
         }
         this.getChildData(record, index);
@@ -191,7 +191,7 @@ class TreePage extends React.Component<TreePageProps, TreePageStates> {
     };
 
     // get child data according the parent data, meanwhile record the parent row map of key:index
-    private getChildData = (record: IStringAnyMap, index: number) => {
+    private getChildData = (record: StringAnyMap, index: number) => {
         if (!this.props.params.child) return;
         let params = {};
         const parentQuery = this.props.params.child.table.parentQueryParam;
@@ -208,7 +208,7 @@ class TreePage extends React.Component<TreePageProps, TreePageStates> {
             data: params,
 
             error: (err) => message.error('网络错误，请稍后重试'),
-            success: (result: IStringAnyMap) => {
+            success: (result: StringAnyMap) => {
                 if (result.msg != '') {
                     message.error(result.msg);
                 } else {
@@ -226,7 +226,7 @@ class TreePage extends React.Component<TreePageProps, TreePageStates> {
     };
 
     // get parent data according
-    private getParentData = (childKeyVal: string): IStringAnyMap => {
+    private getParentData = (childKeyVal: string): StringAnyMap => {
         for (let key in this.state.childData) {
             const childData = this.state.childData[key];
             for (let i = 0, len = childData.length; i < len; i++) {
@@ -239,7 +239,7 @@ class TreePage extends React.Component<TreePageProps, TreePageStates> {
     };
 
 // set stripped table
-    private static rowRender = (_record: IStringAnyMap, index: number): string => {
+    private static rowRender = (_record: StringAnyMap, index: number): string => {
         if (index % 2 == 1) {
             return 'striped';
         }
@@ -261,7 +261,7 @@ class TreePage extends React.Component<TreePageProps, TreePageStates> {
     };
 
 // when select changes, enable or disable some buttons at top
-    private onChildSelectChange = (keys: string[], rows: IStringAnyMap[]) => {
+    private onChildSelectChange = (keys: string[], rows: StringAnyMap[]) => {
         // set the row to parentRow and childRow when there is only one row selected row in child row.
         this.setState({childSelectedKeys: keys});
         if (rows.length === 1) {
@@ -487,7 +487,7 @@ class TreePage extends React.Component<TreePageProps, TreePageStates> {
                        size="small"
                        bordered
                        rowClassName={ TreePage.rowRender }
-                       rowKey={ (record: IStringAnyMap) => record[this.parentKey] }
+                       rowKey={ (record: StringAnyMap) => record[this.parentKey] }
                        {...expand} />
             </Spin>
         );

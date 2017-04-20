@@ -123,4 +123,3 @@ export const formGroupProps: ColumnField[] = [
         label: 'Password',
     }
 ];
-

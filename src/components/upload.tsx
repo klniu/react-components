@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {Modal, Alert, Upload, Icon, message} from 'antd';
-import {IAlert, IStringAnyMap, RandomStr} from '../common/commons';
+import {AlertGroup, StringAnyMap, RandomStr} from '../common/commons';
 import update from 'immutability-helper';
 
 export interface UploadModalProps {
@@ -9,44 +9,44 @@ export interface UploadModalProps {
     accept: string;
     mainTip?: string;
     secondaryTip?: string;
-    params?: IStringAnyMap;// the parameters to request or a function to generate parameters
+    params?: StringAnyMap; // the parameters to request or a function to generate parameters
     multiple?: boolean;
     maxSize?: number;
     onComplete?: () => void;
 }
 
 interface UploadModalStates {
-    alertShow: boolean
-    alerts: IAlert[]
-    parameters: IStringAnyMap
+    alertShow: boolean;
+    alerts: AlertGroup[];
+    parameters: StringAnyMap;
 }
 
 export class UploadModal extends React.Component<UploadModalProps, UploadModalStates> {
-    constructor(props: any) {
-        super(props);
-    }
-
     state: UploadModalStates = {
         alertShow: false,
         alerts: [],
         parameters: {}
     };
 
-    private handleChange = (info: IStringAnyMap) => {
+    constructor(props: UploadModalProps) {
+        super(props);
+    }
+
+    handleChange = (info: StringAnyMap) => {
         let fileList = info.fileList;
         // 读取远程路径并显示链接
-        let alerts: IAlert[] = [];
-        fileList.map((file: IStringAnyMap) => {
+        let alerts: AlertGroup[] = [];
+        fileList.map((file: StringAnyMap) => {
             let res = file.response;
             if (res) {
-                let alert: IAlert = {type: 'success', messages: []};
+                let alert: AlertGroup = {type: 'success', messages: []};
                 alert.messages.push('文件：' + file.name, '----------------------------------------');
                 // response body is {data: object, msg:""}
                 // failure
                 if (!res.data) {
                     alert.type = 'error';
                     // only one msg, display instantly
-                    if (res.msg.length == 1) {
+                    if (res.msg.length === 1) {
                         alert.messages.push(res.msg[0]);
                     } else {
                         res.msg.map((text: string) => alert.messages.push(text));
@@ -62,7 +62,7 @@ export class UploadModal extends React.Component<UploadModalProps, UploadModalSt
         }
     };
 
-    private handleBeforeUpload = (file: IStringAnyMap) => {
+    handleBeforeUpload = (file: StringAnyMap) => {
         let ext = file.name.split('.').pop().toLowerCase();
         if (!this.props.accept.includes(ext)) {
             message.error('无效的文件类型，文件类型应为：' + this.props.accept, 3);
@@ -78,9 +78,11 @@ export class UploadModal extends React.Component<UploadModalProps, UploadModalSt
         return true;
     };
 
-    private onClose = () => {
-        this.setState({alertShow: false,});
-        this.props.onComplete && this.props.onComplete();
+    onClose = () => {
+        this.setState({alertShow: false});
+        if (this.props.onComplete) {
+            this.props.onComplete();
+        }
     };
 
     render() {

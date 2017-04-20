@@ -1,32 +1,32 @@
-import {isNullOrUndefined} from "util";
-import reqwest from "reqwest";
+import {isNullOrUndefined} from 'util';
+import reqwest from 'reqwest';
 
-export interface IStringTMap<T> {
+export interface StringTMap<T> {
     [key: string]: T;
 }
-export interface INumberTMap<T> {
+export interface NumberTMap<T> {
     [key: number]: T;
 }
 
-export interface IStringAnyMap extends IStringTMap<any> {
+export interface StringAnyMap extends StringTMap<any> {
 }
-export interface INumberAnyMap extends INumberTMap<any> {
-}
-
-export interface IStringStringMap extends IStringTMap<string> {
-}
-export interface INumberStringMap extends INumberTMap<string> {
+export interface NumberAnyMap extends NumberTMap<any> {
 }
 
-export interface IStringNumberMap extends IStringTMap<number> {
+export interface StringStringMap extends StringTMap<string> {
 }
-export interface INumberNumberMap extends INumberTMap<number> {
-}
-
-export interface IStringBooleanMap extends IStringTMap<boolean> {
+export interface NumberStringMap extends NumberTMap<string> {
 }
 
-export interface INumberBooleanMap extends INumberTMap<boolean> {
+export interface StringNumberMap extends StringTMap<number> {
+}
+export interface NumberNumberMap extends NumberTMap<number> {
+}
+
+export interface StringBooleanMap extends StringTMap<boolean> {
+}
+
+export interface NumberBooleanMap extends NumberTMap<boolean> {
 }
 
 // golang NullString
@@ -42,15 +42,15 @@ export interface ServerResult {
 }
 
 // alert
-export interface IAlert {
-    type: "success" | "error" | "info" | "warning";
+export interface AlertGroup {
+    type: 'success' | 'error' | 'info' | 'warning';
     messages: string[];
 }
 
 // getArray assign the array to given variable
 export function GetArray(url: string, variable: any[], callback: Function) {
     reqwest({
-        method: "post",
+        method: 'post',
         url: url, success: (result) => {
             variable.splice(0, variable.length);
             Array.prototype.push.apply(variable, result.data);
@@ -67,11 +67,11 @@ export function GetNullString(val: NullString) {
 }
 
 export function RandomStr() {
-    let text = "";
-    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let text = '';
+    let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-    for (let i = 0; i < 5; i++)
+    for (let i = 0; i < 5; i++) {
         text += possible.charAt(Math.floor(Math.random() * possible.length));
-
+    }
     return text;
 }
