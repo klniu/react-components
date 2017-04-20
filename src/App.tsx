@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {BrowserRouter as Router, Route, Link} from 'react-router-dom';
+import {BrowserRouter as Router, Route} from 'react-router-dom';
 import './App.css';
 import User from './components/user';
 import IForm from './components/form';
@@ -8,22 +8,24 @@ import IFormModal from './components/formModal';
 import Row from 'antd/lib/grid/row';
 import Col from 'antd/lib/grid/col';
 import {UploadModal} from './components/upload';
+import {Layout, message} from 'antd';
+import {default as Header, TitleLink} from './components/header';
 
 class App extends React.Component<{}, {}> {
     render() {
+        const links: TitleLink[] = [
+            {name: 'Login', link: '/user/Login', iconType: 'setting'},
+            {link: '/user/ChangePass', name: 'Change Password'},
+            {link: '/Form', name: 'Form'},
+            {link: '/FormModal', name: 'FormModal'},
+            {link: '/Upload', name: 'Upload'},
+            {link: '/message', name: 'TestHeaderOnClick', onClick: () => message.success('successufl')}
+        ];
         return (
-            <div className="App">
+            <Layout className="App">
                 <Router>
                     <div>
-                        <ul>
-                            <li><Link to="/user/Login">Login</Link></li>
-                            <li><Link to="/user/ChangePass">Change Password</Link></li>
-                            <li><Link to="/Form">Form</Link></li>
-                            <li><Link to="/FormModal">FormModal</Link></li>
-                            <li><Link to="/Upload">Upload</Link></li>
-                        </ul>
-                        <hr/>
-
+                        <Header logoUrl="" titles={links}/>
                         <Route path="/user/Login" component={UserLogin}/>
                         <Route path="/user/ChangePass" component={UserChangePass}/>
                         <Route path="/Form" component={IFormTest}/>
@@ -31,7 +33,7 @@ class App extends React.Component<{}, {}> {
                         <Route path="/Upload" component={UploadTest}/>
                     </div>
                 </Router>
-            </div>
+            </Layout>
         );
     }
 }
